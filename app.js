@@ -32,6 +32,8 @@ app.use("/", postRoutes);
 app.use("/postById", postRoutes);
 app.use("/getUsersByName", postRoutes);
 app.use("/createUser", postRoutes);
+app.use("/updateEmail", postRoutes);
+app.use("/deleteUser", postRoutes);
 
 
 const port = 3000;
