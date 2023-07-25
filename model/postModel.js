@@ -25,21 +25,39 @@ const db = require('../database')
      //get all users
      fetchAll(body){
 
-        var index = (body.pageIndex - 1);
-        var pageIndex = (Math.abs(index) * 10);
-        console.log("page: "+ (pageIndex));
-        const data = new Promise((resolve,reject)=>{
-
-            db.query('call getAllUsers(?)',[pageIndex], function (error, results, fields) {
-                if (error){
-                    console.log("Error: " + err);
-                    reject(error);
-                }else{
-                    resolve(results);
-                }
-              });
-        });
-        return data;
+        if(body.pageIndex != 0){
+            var index = (body.pageIndex - 1);
+            var pageIndex = (Math.abs(index) * 10);
+            console.log("page IF: "+ (pageIndex));
+            const data = new Promise((resolve,reject)=>{
+    
+                db.query('call getAllUserByIndex(?)',[pageIndex], function (error, results, fields) {
+                    if (error){
+                        console.log("Error: " + err);
+                        reject(error);
+                    }else{
+                        resolve(results);
+                    }
+                  });
+            });
+            return data;    
+        }else{
+            var pageIndex = body.pageIndex;
+            console.log("page Else: "+ (body.pageIndex));
+            const data = new Promise((resolve,reject)=>{
+    
+                db.query('call getAllUsers()', function (error, results, fields) {
+                    if (error){
+                        console.log("Error: " + err);
+                        reject(error);
+                    }else{
+                        resolve(results);
+                    }
+                  });
+            });
+            return data;    
+        }
+        
     }
 
     //get user by id

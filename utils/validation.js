@@ -17,3 +17,12 @@ exports.updaeEmail = [
 exports.deleteUser = [
     check('id').not().isEmpty(),
 ];
+
+exports.getOtp = [
+    check('email').not().isEmpty(),
+];
+
+exports.verifyOtp = [
+    check('email').not().isEmpty(),
+    check('otp').not().isEmpty(),
+];
