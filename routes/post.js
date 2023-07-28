@@ -2,14 +2,15 @@ const express = require('express')
 const postsController = require('../controllers/posts')
 const loginController = require('../controllers/loginController')
 const auth = require('../middleware/auth');
+// const auth = require('../middleware/auth');
 
 const router = express.Router()
 
 const validator = require('../utils/validation')
 
-router.get('/api/getAllData', postsController.getPosts);
+router.get('/api/getAllData',auth, postsController.getPosts);
 router.get('/api/postById',validator.getUserById, postsController.getPostById);
-router.get('/api/getUsersByName',validator.getUserByName, postsController.getUserByName);
+router.get('/api/getUsersByName',auth, validator.getUserByName, postsController.getUserByName);
 router.post('/api/addUser',validator.createUser,postsController.createUser);
 router.put('/api/updateEmail',validator.updaeEmail,postsController.updateEmail);
 router.delete('/api/deleteUser',validator.deleteUser,postsController.deleteUser);

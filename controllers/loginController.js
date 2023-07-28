@@ -17,10 +17,12 @@ exports.getOtp = (req,res, next)=>{
     }else{
         let data = login.login(req.body).then((result)=>{
 
+            const otp = result[0][0]['otp'];
+            console.log(otp);
             var data1 = {
                 'status' : 200,
                 'message': "Success",
-                'data' : "OTP Sent"
+                'data' : "OTP Sent: "+ otp
               };
             res.json(data1);
         }).catch((error)=>{

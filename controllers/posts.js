@@ -1,6 +1,7 @@
 
 const User = require('../model/postModel')
 const user = new User();
+const jwt = require('jsonwebtoken');
 
 const { validationResult } = require('express-validator');
 
@@ -39,7 +40,18 @@ exports.getPostById = (req,res, next)=>{
 
 //get All Users
 exports.getPosts =  (req,res, next)=>{
-    const body = req.query;
+    jwt.verify(req.token, process.env.SECRET_KEY, (err, authData)=>{
+        // console.log("Auth: " +authData[0]);
+        if(err){
+            var data1 = {
+                'status' : 200,
+                'message': "Failure",
+                'data' : "Token Invalid"
+              };
+              res.status(401);
+            res.json(data1);    
+        }else{
+            const body = req.query;
     user.fetchAll(body).then(result =>{
         var data1 = {
             'status' : 200,
@@ -55,6 +67,11 @@ exports.getPosts =  (req,res, next)=>{
           };
         res.json(data1);    
     });
+        }
+    }
+    )
+    
+    
 
 }
 
@@ -93,34 +110,48 @@ exports.createUser = (req,res, next)=>{
 
 //get user by name
 exports.getUserByName = (req,res, next)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const missingParam = errors.errors[0]["path"];
-        var data1 = {
-            'status' : 100,
-            'message': "Missing parameter: "+ missingParam,
-            'data' : ""
-          };
-        res.json(data1);
-    }else{
-    var userName = req.query.name;
-    let data = user.fetchUserByName(userName).then((result)=>{
-        var data1 = {
-            'status' : 200,
-            'message': "Success",
-            'data' : result[0]
-          };
-        res.json(data1);
-    }).catch((error)=>{
-        console.log(error);
-        var data1 = {
-            'status' : 200,
-            'message': "Failre",
-            'data' : error
-          };
-          res.json(data1);
-    });
-}
+    jwt.verify(req.token, process.env.SECRET_KEY, (err, authData)=>{
+        
+        if(err){
+            console.log("Auth: " +err);
+            var data1 = {
+                'status' : 200,
+                'message': "Failure",
+                'data' : "Token Invalid Controller"
+              };
+              res.status(401);
+            res.json(data1);    
+        }else{
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                const missingParam = errors.errors[0]["path"];
+                var data1 = {
+                    'status' : 100,
+                    'message': "Missing parameter: "+ missingParam,
+                    'data' : ""
+                  };
+                res.json(data1);
+            }else{
+            var userName = req.query.email;
+            console.log(userName);
+            let data = user.fetchUserByName(userName).then((result)=>{
+                var data1 = {
+                    'status' : 200,
+                    'message': "Success",
+                    'data' : result[0]
+                  };
+                res.json(data1);
+            }).catch((error)=>{
+                console.log(error);
+                var data1 = {
+                    'status' : 200,
+                    'message': "Failre",
+                    'data' : error
+                  };
+                  res.json(data1);
+            });
+            }
+        }})
 }
 
 

@@ -2,7 +2,7 @@ const { check } = require('express-validator');
 
 exports.getUserById = [check('id').not().isEmpty()];
 
-exports.getUserByName = [check('name').not().isEmpty()];
+exports.getUserByName = [check('email').not().isEmpty()];
 
 exports.createUser = [
     check('name').not().isEmpty(),

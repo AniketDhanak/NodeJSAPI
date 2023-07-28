@@ -82,6 +82,7 @@ const db = require('../database')
      //get users by name
      async fetchUserByName(body){
         var uName = body;
+        console.log(uName);
          const data = new Promise((resolve,reject)=>{
                          db.query('call getUserByName(?);',[uName] , function (error, results, fields) {
                  if (error){
